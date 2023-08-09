@@ -24,6 +24,18 @@ namespace Cascading_Dropdown
             }
         }
 
+        // Clear form
+        public void ClearForm()
+        {
+            name_Text.Text = string.Empty;
+            email_Text.Text = string.Empty;
+            gender_rbl.ClearSelection();
+            country_ddl.ClearSelection();
+            state_ddl.ClearSelection();
+            state_ddl.Enabled = false;
+            pass_Text.Text = string.Empty;
+        }
+
         // Bind gender
         public void BindGender()
         {
@@ -101,6 +113,7 @@ namespace Cascading_Dropdown
             cmd.Parameters.AddWithValue("@password", pass_Text.Text);
             cmd.ExecuteNonQuery();
             _connection.Close();
+            ClearForm();
         }
     }
 }
