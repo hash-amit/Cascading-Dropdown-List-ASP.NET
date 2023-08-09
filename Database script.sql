@@ -129,3 +129,18 @@ BEGIN
 	SELECT * FROM tState WHERE CID = @country_id
 END;
 
+-- Create proc to insert user record into "tUserRecord" table
+CREATE PROC spInsertRecord
+(
+	@name VARCHAR(60),
+	@email VARCHAR(60),
+	@gender INT,
+	@country INT,
+	@state INT,
+	@password VARCHAR(10)
+)
+AS
+BEGIN
+	INSERT INTO tUserRecord(Name, Email, Gender, Country, State, Password) VALUES (@name,@email,@gender,@country,@state,@password)
+END;
+

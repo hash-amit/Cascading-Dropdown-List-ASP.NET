@@ -90,7 +90,17 @@ namespace Cascading_Dropdown
 
         protected void create_btn_Click(object sender, EventArgs e)
         {
-
+            _connection.Open();
+            SqlCommand cmd = new SqlCommand("spInsertRecord", _connection);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@name", name_Text.Text);
+            cmd.Parameters.AddWithValue("@email", email_Text.Text);
+            cmd.Parameters.AddWithValue("@gender", gender_rbl.SelectedValue);
+            cmd.Parameters.AddWithValue("@country", country_ddl.SelectedValue);
+            cmd.Parameters.AddWithValue("@state", state_ddl.SelectedValue);
+            cmd.Parameters.AddWithValue("@password", pass_Text.Text);
+            cmd.ExecuteNonQuery();
+            _connection.Close();
         }
     }
 }
