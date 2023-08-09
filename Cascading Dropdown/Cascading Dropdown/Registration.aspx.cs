@@ -19,6 +19,8 @@ namespace Cascading_Dropdown
             if (!IsPostBack)
             {
                 BindGender();
+                BindCountry();
+                state_ddl.Enabled = false;
             }
         }
 
@@ -38,9 +40,52 @@ namespace Cascading_Dropdown
             gender_rbl.DataBind();
         }
 
+        // Bind Country
+        public void BindCountry()
+        {
+            _connection.Open();
+            SqlCommand cmd = new SqlCommand("spBindCountry", _connection);
+            cmd.CommandType = CommandType.StoredProcedure;
+            SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+            DataTable dt = new DataTable();
+            adapter.Fill(dt);
+            _connection.Close();
+            country_ddl.DataValueField = "Country ID";
+            country_ddl.DataTextField = "Country Name";
+            country_ddl.DataSource = dt;
+            country_ddl.DataBind();
+            country_ddl.Items.Insert(0, new ListItem("Select Country", "0"));
+        }
+
+        // Bind state
+        public void BindState()
+        {
+            _connection.Open();
+            SqlCommand cmd = new SqlCommand("spBindState", _connection);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@country_id", country_ddl.SelectedValue);
+            SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+            DataTable dt = new DataTable();
+            adapter.Fill(dt);
+            _connection.Close();
+            state_ddl.DataValueField = "State ID";
+            state_ddl.DataTextField = "State Name";
+            state_ddl.DataSource = dt;
+            state_ddl.DataBind();
+            state_ddl.Items.Insert(0, new ListItem("Select state", "0"));
+        }
+
         protected void country_ddl_SelectedIndexChanged(object sender, EventArgs e)
         {
-
+            if (country_ddl.SelectedIndex != 0)
+            {
+                state_ddl.Enabled = true;
+                BindState();
+            }
+            else 
+            { 
+                state_ddl.Enabled = false; 
+            }
         }
 
         protected void create_btn_Click(object sender, EventArgs e)
