@@ -6,11 +6,17 @@
 <head runat="server">
     <title>Create Account</title>
     <style>
+        .table_container{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 500px;
+        }
         table{
             display:flex;
             justify-content:center;
             align-items:center;
-            height: 500px;
+            /*height: 500px;*/
         }
         table tbody {
             background: gainsboro;
@@ -30,7 +36,7 @@
 </head>
 <body>
     <form id="form1" runat="server">
-        <div>
+        <div class="table_container">
             <table>
                 <tr class="center">
                     <td colspan="2"><h3>Create Account</h3></td>
@@ -48,7 +54,7 @@
 
                 <tr>
                     <td>Gender: </td>
-                    <td><asp:RadioButtonList ID="gender_rbl" runat="server"></asp:RadioButtonList></td>
+                    <td><asp:RadioButtonList ID="gender_rbl" runat="server" RepeatColumns="3"></asp:RadioButtonList></td>
                 </tr>
 
                 <tr>
