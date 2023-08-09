@@ -71,6 +71,10 @@
                     <td><asp:TextBox ID="pass_Text" runat="server"></asp:TextBox></td>
                 </tr>
 
+                <tr>
+                    <td colspan="2"><center><asp:Label ID="msg" runat="server" ForeColor="Red" Text=""></asp:Label></center></td>
+                </tr>
+
                 <tr class="center">
                     <td colspan="2"><asp:Button ID="create_btn" runat="server" Text="Create Account" OnClick="create_btn_Click" /></td>
                 </tr>

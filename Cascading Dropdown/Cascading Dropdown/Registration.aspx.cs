@@ -5,6 +5,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
+using System.Web.Configuration;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
@@ -100,20 +101,105 @@ namespace Cascading_Dropdown
             }
         }
 
-        protected void create_btn_Click(object sender, EventArgs e)
+        // Validate form
+        public bool ValidateForm()
+        {
+            if (name_Text.Text != string.Empty)
+            {
+                if (email_Text.Text != string.Empty)
+                {
+                    if (gender_rbl.SelectedValue != string.Empty)
+                    {
+                        if (country_ddl.SelectedValue != "0")
+                        {
+                            if (state_ddl.SelectedValue != "0")
+                            {
+                                if (pass_Text.Text != string.Empty)
+                                {
+                                    if (pass_Text.Text.Length >= 5 && pass_Text.Text.Length <= 8)
+                                    {
+                                        return true;
+                                    }
+                                    else
+                                    {
+                                        msg.Text = "Password should be 5 to 8 charracters long";
+                                    }
+                                }
+                                else
+                                {
+                                    msg.Text = "Please make your password";
+                                }
+                            }
+                            else
+                            {
+                                msg.Text = "Please select the state!";
+                            }
+                        }
+                        else
+                        {
+                            msg.Text = "Please select your country!";
+                        }
+                    }
+                    else
+                    {
+                        msg.Text = "Please select the gender!";
+                    }
+                }
+                else
+                {
+                    msg.Text = "Please create your email!";
+                }
+            }
+            else
+            {
+                msg.Text = "Please fill you name";
+            }
+            return false;
+        }
+
+        public bool CheckDuplicateRegistration()
         {
             _connection.Open();
-            SqlCommand cmd = new SqlCommand("spInsertRecord", _connection);
+            SqlCommand cmd = new SqlCommand("spCheckDuplicacy", _connection);
             cmd.CommandType = CommandType.StoredProcedure;
-            cmd.Parameters.AddWithValue("@name", name_Text.Text);
             cmd.Parameters.AddWithValue("@email", email_Text.Text);
-            cmd.Parameters.AddWithValue("@gender", gender_rbl.SelectedValue);
-            cmd.Parameters.AddWithValue("@country", country_ddl.SelectedValue);
-            cmd.Parameters.AddWithValue("@state", state_ddl.SelectedValue);
             cmd.Parameters.AddWithValue("@password", pass_Text.Text);
-            cmd.ExecuteNonQuery();
+            SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+            DataTable dt = new DataTable();
+            adapter.Fill(dt);
             _connection.Close();
-            ClearForm();
+            if (dt.Rows.Count == 1)
+            {
+                msg.Text = "This email-ID is already registered!";
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+        protected void create_btn_Click(object sender, EventArgs e)
+        {
+            if (ValidateForm())
+            {
+                if (CheckDuplicateRegistration())
+                {
+                    _connection.Open();
+                    SqlCommand cmd = new SqlCommand("spInsertRecord", _connection);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@name", name_Text.Text);
+                    cmd.Parameters.AddWithValue("@email", email_Text.Text);
+                    cmd.Parameters.AddWithValue("@gender", gender_rbl.SelectedValue);
+                    cmd.Parameters.AddWithValue("@country", country_ddl.SelectedValue);
+                    cmd.Parameters.AddWithValue("@state", state_ddl.SelectedValue);
+                    cmd.Parameters.AddWithValue("@password", pass_Text.Text);
+                    cmd.ExecuteNonQuery();
+                    _connection.Close();
+                    ClearForm();
+                    msg.Text = "You account has been created!";
+                }
+            }
         }
     }
 }

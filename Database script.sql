@@ -144,3 +144,14 @@ BEGIN
 	INSERT INTO tUserRecord(Name, Email, Gender, Country, State, Password) VALUES (@name,@email,@gender,@country,@state,@password)
 END;
 
+-- Create stored procedure to check duplicate registration
+CREATE PROC spCheckDuplicacy
+(
+	@email VARCHAR(60),
+	@password VARCHAR(10)
+)
+AS
+BEGIN
+	SELECT * FROM tUserRecord WHERE Email = @email AND Password = @password
+END;
+
